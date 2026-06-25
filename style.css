@@ -1,0 +1,8 @@
+
+body{font-family:Arial,sans-serif;background:#f8f2e7;margin:0;display:flex;justify-content:center;align-items:center;min-height:100vh}
+.card{background:white;padding:30px;border-radius:20px;max-width:500px;width:90%;text-align:center;box-shadow:0 10px 30px rgba(0,0,0,.15)}
+h1{color:#9c7a2b} h2{font-size:18px}
+input,button{width:100%;padding:14px;margin-top:10px;box-sizing:border-box}
+button{background:#c9a227;color:white;border:none;font-weight:bold}
+#result{margin-top:20px}
+.big{font-size:120px;color:#c9a227;font-weight:bold}
