@@ -1,16 +1,15 @@
 /*
-=========================================================
+==================================================
 Sheraton Seating System
-Version: 0.3
-Author: ChatGPT
-=========================================================
+Version 0.3
+==================================================
 */
 
 "use strict";
 
-/* =======================================================
-   ELEMENTY HTML
-======================================================= */
+/* ==========================
+   ELEMENTY
+========================== */
 
 const searchInput = document.getElementById("searchInput");
 const results = document.getElementById("results");
@@ -21,31 +20,21 @@ const closeModal = document.getElementById("closeModal");
 const hallTitle = document.getElementById("hallTitle");
 const tableMarker = document.getElementById("tableMarker");
 
-/* =======================================================
+/* ==========================
    DANE
-======================================================= */
+========================== */
 
 let guests = [];
 
-/*
-Pozycje stolików.
-
-Po otrzymaniu plan.png
-uzupełnimy wszystkie współrzędne.
-
-Przykład:
-
-12: { x: 650, y: 420 }
-
-*/
-
 const tablePositions = {
+
+    // Uzupełnimy po dodaniu plan.png
 
 };
 
-/* =======================================================
+/* ==========================
    NORMALIZACJA
-======================================================= */
+========================== */
 
 function normalize(text) {
 
@@ -79,9 +68,9 @@ function normalize(text) {
 
 }
 
-/* =======================================================
+/* ==========================
    ŁADOWANIE GOŚCI
-======================================================= */
+========================== */
 
 async function loadGuests() {
 
@@ -111,9 +100,9 @@ async function loadGuests() {
 
 }
 
-/* =======================================================
+/* ==========================
    KOMUNIKATY
-======================================================= */
+========================== */
 
 function showMessage(text) {
 
@@ -132,11 +121,18 @@ function hideMessage() {
 }
 
 
-/* =======================================================
-   TWORZENIE KARTY GOŚCIA
-======================================================= */
+/* ==========================
+   TWORZENIE KARTY
+========================== */
 
 function createGuestCard(guest) {
+
+    const firstName = guest.first_name || guest.firstName || "";
+    const lastName = guest.last_name || guest.lastName || "";
+
+    const table = guest.table ?? "-";
+
+    const hall = guest.hall || guest.room || "Sheraton Sopot";
 
     const card = document.createElement("article");
 
@@ -144,17 +140,13 @@ function createGuestCard(guest) {
 
     card.innerHTML = `
 
-        <h3>
-
-            ${guest.firstName} ${guest.lastName}
-
-        </h3>
+        <h3>${firstName} ${lastName}</h3>
 
         <div class="info">
 
             <strong>🪑 Stolik:</strong>
 
-            ${guest.table ?? "-"}
+            ${table}
 
         </div>
 
@@ -162,14 +154,11 @@ function createGuestCard(guest) {
 
             <strong>🏛 Sala:</strong>
 
-            ${guest.hall ?? "-"}
+            ${hall}
 
         </div>
 
-        <button
-            class="planButton"
-            data-table="${guest.table}"
-        >
+        <button class="planButton">
 
             Pokaż plan sali
 
@@ -177,21 +166,21 @@ function createGuestCard(guest) {
 
     `;
 
-    const button = card.querySelector(".planButton");
+    card.querySelector(".planButton")
 
-    button.addEventListener("click", () => {
+        .addEventListener("click", () => {
 
-        openPlan(guest);
+            openPlan(guest);
 
-    });
+        });
 
     return card;
 
 }
 
-/* =======================================================
-   WYŚWIETLANIE WYNIKÓW
-======================================================= */
+/* ==========================
+   WYNIKI
+========================== */
 
 function renderResults(foundGuests) {
 
@@ -199,9 +188,7 @@ function renderResults(foundGuests) {
 
     if (foundGuests.length === 0) {
 
-        showMessage(
-            "Nie znaleziono żadnego gościa."
-        );
+        showMessage("Nie znaleziono żadnego gościa.");
 
         return;
 
@@ -221,9 +208,9 @@ function renderResults(foundGuests) {
 
 }
 
-/* =======================================================
+/* ==========================
    WYSZUKIWANIE
-======================================================= */
+========================== */
 
 function searchGuests() {
 
@@ -247,19 +234,19 @@ function searchGuests() {
 
         const firstName = normalize(
 
-            guest.firstName
+            guest.first_name || guest.firstName
 
         );
 
         const lastName = normalize(
 
-            guest.lastName
+            guest.last_name || guest.lastName
 
         );
 
         const fullName = normalize(
 
-            guest.firstName + " " + guest.lastName
+            firstName + " " + lastName
 
         );
 
@@ -284,21 +271,21 @@ function searchGuests() {
 }
 
 
-/* =======================================================
+/* ==========================
    PLAN SALI
-======================================================= */
+========================== */
 
 function openPlan(guest) {
 
-    hallTitle.textContent =
-        "Sala: " + (guest.hall ?? "-");
+    const hall = guest.hall || guest.room || "Sheraton Sopot";
+
+    hallTitle.textContent = "Sala: " + hall;
 
     modal.classList.remove("hidden");
 
-    const position =
-        tablePositions[guest.table];
+    const table = guest.table;
 
-    if (!position) {
+    if (!tablePositions[table]) {
 
         tableMarker.style.display = "none";
 
@@ -309,30 +296,22 @@ function openPlan(guest) {
     tableMarker.style.display = "block";
 
     tableMarker.style.left =
-        position.x + "px";
+        tablePositions[table].x + "px";
 
     tableMarker.style.top =
-        position.y + "px";
+        tablePositions[table].y + "px";
 
 }
+
+/* ==========================
+   ZAMKNIĘCIE OKNA
+========================== */
 
 function closePlan() {
 
     modal.classList.add("hidden");
 
 }
-
-/* =======================================================
-   ZDARZENIA
-======================================================= */
-
-searchInput.addEventListener(
-
-    "input",
-
-    searchGuests
-
-);
 
 closeModal.addEventListener(
 
@@ -346,9 +325,9 @@ modal.addEventListener(
 
     "click",
 
-    function(event) {
+    function(event){
 
-        if (event.target === modal) {
+        if(event.target===modal){
 
             closePlan();
 
@@ -358,21 +337,25 @@ modal.addEventListener(
 
 );
 
-/* =======================================================
-   START APLIKACJI
-======================================================= */
+/* ==========================
+   START
+========================== */
+
+searchInput.addEventListener(
+
+    "input",
+
+    searchGuests
+
+);
 
 document.addEventListener(
 
     "DOMContentLoaded",
 
-    function () {
+    function(){
 
         loadGuests();
-
-        console.log(
-            "Sheraton Seating System uruchomiony."
-        );
 
     }
 
