@@ -1,51 +1,77 @@
 <!DOCTYPE html>
 <html lang="pl">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-<title>Bal Lekarzy</title>
-
-<link rel="stylesheet" href="style.css">
-
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;700&family=Montserrat:wght@300;400;500;600&display=swap" rel="stylesheet">
-
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Sheraton Seating System</title>
+  <link rel="stylesheet" href="style.css">
 </head>
-
 <body>
 
-<div class="card">
+<header class="hero">
+  <div class="container">
+    <img src="images/logo.png" alt="Sheraton" class="logo">
+    <h1>Sheraton Seating System</h1>
+    <p class="subtitle">Znajdź swoje miejsce przy stoliku</p>
+  </div>
+</header>
 
-<div class="logo">
-<img src="logo.png" alt="Sheraton">
+<main class="container">
+
+<section class="search-section">
+  <div class="search-box">
+    <input
+      type="text"
+      id="searchInput"
+      placeholder="Wpisz imię lub nazwisko..."
+      autocomplete="off">
+  </div>
+</section>
+
+<section id="messageBox" class="message hidden">
+</section>
+
+<section id="results" class="results">
+</section>
+
+</main>
+
+<div id="planModal" class="modal hidden">
+
+  <div class="modal-content">
+
+    <button id="closeModal" class="closeButton">&times;</button>
+
+    <h2 id="hallTitle">
+      Plan sali
+    </h2>
+
+    <div class="planWrapper">
+
+      <img
+        src="images/plan.png"
+        id="hallPlan"
+        alt="Plan sali">
+
+      <div id="tableMarker"></div>
+
+    </div>
+
+  </div>
+
 </div>
 
-<h1>Witamy na Balu Lekarzy</h1>
+<footer>
 
-<h2>Gdański Uniwersytet Medyczny</h2>
+  <div class="container">
 
-<p class="opis">
-Wpisz swoje imię lub nazwisko,
-aby odnaleźć miejsce przy stole.
-</p>
+    <p>
+      © Sheraton Seating System
+    </p>
 
-<input
-id="search"
-type="text"
-placeholder="Np. Anna, Szczepańska..."
-autocomplete="off">
+  </div>
 
-<button onclick="searchGuest()">
-Znajdź moje miejsce
-</button>
-
-<div id="suggestions"></div>
-
-<div id="result"></div>
-
-</div>
+</footer>
 
 <script src="script.js"></script>
 
