@@ -1,22 +1,53 @@
 <!DOCTYPE html>
 <html lang="pl">
 <head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Sheraton Seating QR</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Bal Lekarzy</title>
+
 <link rel="stylesheet" href="style.css">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;700&family=Montserrat:wght@300;400;500;600&display=swap" rel="stylesheet">
+
 </head>
+
 <body>
+
 <div class="card">
+
+<div class="logo">
+<img src="logo.png" alt="Sheraton">
+</div>
+
 <h1>Witamy na Balu Lekarzy</h1>
+
 <h2>Gdański Uniwersytet Medyczny</h2>
 
-<input id="first" placeholder="Imię">
-<input id="last" placeholder="Nazwisko">
-<button onclick="searchGuest()">SZUKAJ</button>
+<p class="opis">
+Wpisz swoje imię lub nazwisko,
+aby odnaleźć miejsce przy stole.
+</p>
+
+<input
+id="search"
+type="text"
+placeholder="Np. Anna, Szczepańska..."
+autocomplete="off">
+
+<button onclick="searchGuest()">
+Znajdź moje miejsce
+</button>
+
+<div id="suggestions"></div>
 
 <div id="result"></div>
+
 </div>
+
 <script src="script.js"></script>
+
 </body>
 </html>
