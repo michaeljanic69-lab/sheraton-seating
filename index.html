@@ -1,38 +1,49 @@
 <!DOCTYPE html>
 <html lang="pl">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Sheraton Seating System</title>
-  <link rel="stylesheet" href="style.css">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Sheraton Seating System</title>
+<meta name="theme-color" content="#b08d57">
+<link rel="stylesheet" href="style.css">
 </head>
 <body>
 
 <header class="hero">
   <div class="container">
-    <img src="images/logo.png" alt="Sheraton" class="logo">
-    <h1>Sheraton Seating System</h1>
-    <p class="subtitle">Znajdź swoje miejsce przy stoliku</p>
+    <div class="brand">
+      <div class="brand-line"></div>
+      <h1>Sheraton Seating System</h1>
+      <div class="brand-line"></div>
+    </div>
+
+    <p class="subtitle">
+      Wyszukaj swoje miejsce przy stoliku podczas wydarzenia
+    </p>
+
+    <div class="search-panel">
+      <label for="searchInput" class="visually-hidden">
+        Wyszukiwarka
+      </label>
+
+      <input
+        id="searchInput"
+        type="search"
+        autocomplete="off"
+        placeholder="🔍 Wpisz imię lub nazwisko...">
+
+      <small>
+        Możesz wpisać fragment imienia lub nazwiska.
+      </small>
+    </div>
   </div>
 </header>
 
 <main class="container">
 
-<section class="search-section">
-  <div class="search-box">
-    <input
-      type="text"
-      id="searchInput"
-      placeholder="Wpisz imię lub nazwisko..."
-      autocomplete="off">
-  </div>
-</section>
+  <section id="messageBox" class="message hidden"></section>
 
-<section id="messageBox" class="message hidden">
-</section>
-
-<section id="results" class="results">
-</section>
+  <section id="results" class="results"></section>
 
 </main>
 
@@ -40,7 +51,12 @@
 
   <div class="modal-content">
 
-    <button id="closeModal" class="closeButton">&times;</button>
+    <button
+      id="closeModal"
+      class="closeButton"
+      aria-label="Zamknij">
+      ×
+    </button>
 
     <h2 id="hallTitle">
       Plan sali
@@ -49,8 +65,8 @@
     <div class="planWrapper">
 
       <img
-        src="images/plan.png"
         id="hallPlan"
+        src="images/plan.png"
         alt="Plan sali">
 
       <div id="tableMarker"></div>
@@ -62,15 +78,9 @@
 </div>
 
 <footer>
-
   <div class="container">
-
-    <p>
-      © Sheraton Seating System
-    </p>
-
+    <p>Sheraton Seating System • Wersja 0.3</p>
   </div>
-
 </footer>
 
 <script src="script.js"></script>
