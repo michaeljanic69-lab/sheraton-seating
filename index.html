@@ -1,89 +1,191 @@
 <!DOCTYPE html>
 <html lang="pl">
+
 <head>
+
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Sheraton Seating System</title>
-<meta name="theme-color" content="#b08d57">
+
+<title>Bal Lekarzy | Sheraton Sopot</title>
+
 <link rel="stylesheet" href="style.css">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;600;700&family=Montserrat:wght@300;400;500;600&display=swap" rel="stylesheet">
+
 </head>
+
 <body>
 
-<header class="hero">
-  <div class="container">
-    <div class="brand">
-      <div class="brand-line"></div>
-      <h1>Sheraton Seating System</h1>
-      <div class="brand-line"></div>
-    </div>
-
-    <p class="subtitle">
-      Wyszukaj swoje miejsce przy stoliku podczas wydarzenia
-    </p>
-
-    <div class="search-panel">
-      <label for="searchInput" class="visually-hidden">
-        Wyszukiwarka
-      </label>
-
-      <input
-        id="searchInput"
-        type="search"
-        autocomplete="off"
-        placeholder="🔍 Wpisz imię lub nazwisko...">
-
-      <small>
-        Możesz wpisać fragment imienia lub nazwiska.
-      </small>
-    </div>
-  </div>
-</header>
+<div class="background"></div>
 
 <main class="container">
 
-  <section id="messageBox" class="message hidden"></section>
+<div class="card">
 
-  <section id="results" class="results"></section>
+<header>
 
-</main>
+<img
+src="logo.png"
+class="logo"
+alt="Sheraton">
 
-<div id="planModal" class="modal hidden">
+<h1>Witamy na Balu Lekarzy</h1>
 
-  <div class="modal-content">
+<h2>Gdański Uniwersytet Medyczny</h2>
 
-    <button
-      id="closeModal"
-      class="closeButton"
-      aria-label="Zamknij">
-      ×
-    </button>
+<div class="gold-line"></div>
 
-    <h2 id="hallTitle">
-      Plan sali
-    </h2>
+<p>
 
-    <div class="planWrapper">
+Odnajdź swoje miejsce przy stole wpisując
+imię i nazwisko.
 
-      <img
-        id="hallPlan"
-        src="images/plan.png"
-        alt="Plan sali">
+</p>
 
-      <div id="tableMarker"></div>
+</header>
+
+<section class="search">
+
+<div class="input-group">
+
+<label>
+
+Imię
+
+</label>
+
+<input
+
+type="text"
+
+id="firstName"
+
+placeholder="np. Anna"
+
+autocomplete="off">
+
+</div>
+
+<div class="input-group">
+
+<label>
+
+Nazwisko
+
+</label>
+
+<input
+
+type="text"
+
+id="lastName"
+
+placeholder="np. Szczepańska"
+
+autocomplete="off">
+
+</div>
+
+<button
+id="searchButton"
+onclick="searchGuest()">
+
+Znajdź moje miejsce
+
+</button>
+
+</section>
+
+<section
+id="result"
+class="result hidden">
+
+<div class="result-card">
+
+<p class="small">
+
+Twoje miejsce znajduje się przy stoliku
+
+</p>
+
+<div
+id="tableNumber"
+class="table-number">
+
+--
+
+</div>
+
+<h3 id="roomName">
+
+Baltic Panorama
+
+</h3>
+
+<button
+id="planButton"
+class="planButton">
+
+Pokaż plan sali
+
+</button>
+
+</div>
+
+</section>
+
+
+ <div id="planModal" class="modal hidden">
+
+    <div class="modal-content">
+
+        <button
+            class="close-button"
+            onclick="closePlan()">
+            ✕
+        </button>
+
+        <h2>Plan sal</h2>
+
+        <p class="plan-description">
+            Twój stolik został oznaczony złotym znacznikiem.
+        </p>
+
+        <div class="plan-wrapper">
+
+            <img
+                id="planImage"
+                src="plan.png"
+                alt="Plan sal">
+
+            <div id="tableMarker"></div>
+
+        </div>
 
     </div>
-
-  </div>
 
 </div>
 
 <footer>
-  <div class="container">
-    <p>Sheraton Seating System • Wersja 0.3</p>
-  </div>
+
+    <p>
+
+        Sheraton Sopot Hotel
+        <br>
+        Bal Lekarzy
+
+    </p>
+
 </footer>
+
+</main>
 
 <script src="script.js"></script>
 
 </body>
-</html>
+
+</html> 
+  
