@@ -1,246 +1,518 @@
-"use strict";
-
-/* =====================================================
+/* ======================================================
    SHERATON SEATING SYSTEM
-   SCRIPT.JS
-===================================================== */
+   STYLE.CSS
+====================================================== */
 
-/* ==========================
-   ELEMENTY
-========================== */
+:root{
 
-const firstNameInput = document.getElementById("firstName");
-const lastNameInput = document.getElementById("lastName");
+    --cream:#fbf7ef;
+    --cream2:#f6efe1;
 
-const result = document.getElementById("result");
-const tableNumber = document.getElementById("tableNumber");
-const roomName = document.getElementById("roomName");
-const planButton = document.getElementById("planButton");
+    --gold:#c9a24b;
+    --gold-dark:#a67b1d;
+    --gold-light:#e6c87a;
 
-const modal = document.getElementById("planModal");
-const planImage = document.getElementById("planImage");
-const tableMarker = document.getElementById("tableMarker");
+    --text:#3f3424;
+    --text-light:#75654a;
 
-/* ==========================
-   DANE
-========================== */
+    --shadow:0 15px 45px rgba(0,0,0,.10);
 
-let guests = [];
-
-/* ==========================
-   POZYCJE STOLIKÓW
-========================== */
-
-const tablePositions = {
-
-    // Uzupełnimy po naniesieniu współrzędnych
-    // 1:{x:120,y:220},
-    // 2:{x:220,y:220},
-
-};
-
-/* ==========================
-   NORMALIZACJA
-========================== */
-
-function normalize(text){
-
-    return String(text || "")
-        .toLowerCase()
-        .normalize("NFD")
-        .replace(/[\u0300-\u036f]/g,"")
-        .replace(/ł/g,"l")
-        .replace(/ą/g,"a")
-        .replace(/ć/g,"c")
-        .replace(/ę/g,"e")
-        .replace(/ń/g,"n")
-        .replace(/ó/g,"o")
-        .replace(/ś/g,"s")
-        .replace(/ż/g,"z")
-        .replace(/ź/g,"z")
-        .trim();
+    --radius:28px;
 
 }
 
-/* ==========================
-   ŁADOWANIE GOŚCI
-========================== */
+*{
 
-async function loadGuests(){
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
 
-    try{
+}
 
-        const response = await fetch("guests.json");
+html{
 
-        guests = await response.json();
+    scroll-behavior:smooth;
 
-        console.log(
-            "Załadowano",
-            guests.length,
-            "gości."
-        );
+}
+
+body{
+
+    font-family:'Montserrat',sans-serif;
+
+    background:
+    radial-gradient(circle at top,#fffdf8 0%,var(--cream) 45%,var(--cream2) 100%);
+
+    color:var(--text);
+
+    min-height:100vh;
+
+    overflow-x:hidden;
+
+}
+
+/* ==============================
+   TŁO
+============================== */
+
+.background{
+
+    position:fixed;
+
+    inset:0;
+
+    pointer-events:none;
+
+    opacity:.18;
+
+    background-image:
+
+    radial-gradient(circle at 10% 20%,rgba(201,162,75,.25),transparent 30%),
+
+    radial-gradient(circle at 90% 80%,rgba(201,162,75,.20),transparent 28%),
+
+    radial-gradient(circle at 50% 100%,rgba(201,162,75,.12),transparent 45%);
+
+}
+
+/* ==============================
+   GŁÓWNY UKŁAD
+============================== */
+
+.container{
+
+    width:min(430px,92%);
+
+    margin:auto;
+
+    padding:30px 0 60px;
+
+    position:relative;
+
+    z-index:2;
+
+}
+
+.card{
+
+    background:rgba(255,255,255,.75);
+
+    backdrop-filter:blur(14px);
+
+    border-radius:var(--radius);
+
+    padding:38px 26px;
+
+    box-shadow:var(--shadow);
+
+    border:1px solid rgba(201,162,75,.35);
+
+}
+
+/* ==============================
+   LOGO
+============================== */
+
+.logo{
+
+    display:block;
+
+    width:150px;
+
+    margin:0 auto 25px;
+
+}
+
+header{
+
+    text-align:center;
+
+}
+
+h1{
+
+    font-family:'Cinzel',serif;
+
+    font-size:2.2rem;
+
+    color:var(--gold-dark);
+
+    line-height:1.2;
+
+    margin-bottom:12px;
+
+}
+
+h2{
+
+    font-family:'Cinzel',serif;
+
+    font-size:1.1rem;
+
+    font-weight:500;
+
+    color:var(--text);
+
+    margin-bottom:24px;
+
+}
+
+.gold-line{
+
+    width:90px;
+
+    height:2px;
+
+    margin:22px auto;
+
+    background:linear-gradient(
+        to right,
+        transparent,
+        var(--gold),
+        transparent
+    );
+
+}
+
+header p{
+
+    color:var(--text-light);
+
+    font-size:.96rem;
+
+    line-height:1.7;
+
+    margin-bottom:34px;
+
+}
+
+/* ==============================
+   FORMULARZ
+============================== */
+
+.input-group{
+
+    margin-bottom:20px;
+
+}
+
+label{
+
+    display:block;
+
+    margin-bottom:8px;
+
+    font-weight:600;
+
+    color:var(--gold-dark);
+
+}
+
+input{
+
+    width:100%;
+
+    padding:18px;
+
+    border-radius:18px;
+
+    border:1px solid rgba(201,162,75,.45);
+
+    background:white;
+
+    font-size:1rem;
+
+    transition:.25s;
+
+}
+
+input:focus{
+
+    outline:none;
+
+    border-color:var(--gold);
+
+    box-shadow:0 0 0 4px rgba(201,162,75,.18);
+
+}
+
+button{
+
+    width:100%;
+
+    margin-top:10px;
+
+    padding:18px;
+
+    border:none;
+
+    border-radius:18px;
+
+    background:linear-gradient(
+        135deg,
+        var(--gold-light),
+        var(--gold-dark)
+    );
+
+    color:white;
+
+    font-size:1rem;
+
+    font-weight:700;
+
+    cursor:pointer;
+
+    transition:.25s;
+
+}
+
+button:hover{
+
+    transform:translateY(-2px);
+
+    box-shadow:0 12px 30px rgba(166,123,29,.35);
+
+}
+
+/* ==============================
+   WYNIK
+============================== */
+
+.hidden{
+
+    display:none;
+
+}
+
+.result{
+
+    margin-top:38px;
+
+}
+
+.result-card{
+
+    text-align:center;
+
+    background:rgba(255,255,255,.85);
+
+    border:1px solid rgba(201,162,75,.35);
+
+    border-radius:24px;
+
+    padding:34px 24px;
+
+    box-shadow:var(--shadow);
+
+}
+
+.small{
+
+    color:var(--text-light);
+
+    font-size:.95rem;
+
+    margin-bottom:16px;
+
+}
+
+.table-number{
+
+    font-family:'Cinzel',serif;
+
+    font-size:7rem;
+
+    line-height:1;
+
+    color:var(--gold-dark);
+
+    margin:15px 0;
+
+}
+
+#roomName{
+
+    margin-bottom:25px;
+
+    font-size:1.3rem;
+
+    color:var(--gold-dark);
+
+}
+
+.planButton{
+
+    margin-top:5px;
+
+}
+
+/* ==============================
+   MODAL PLANU SAL
+============================== */
+
+.modal{
+
+    position:fixed;
+
+    inset:0;
+
+    background:rgba(0,0,0,.55);
+
+    display:flex;
+
+    justify-content:center;
+
+    align-items:center;
+
+    padding:20px;
+
+    z-index:999;
+
+}
+
+.modal.hidden{
+
+    display:none;
+
+}
+
+.modal-content{
+
+    width:min(1000px,100%);
+
+    max-height:90vh;
+
+    overflow:auto;
+
+    background:#fffdf8;
+
+    border-radius:24px;
+
+    padding:25px;
+
+    box-shadow:0 20px 60px rgba(0,0,0,.25);
+
+    position:relative;
+
+}
+
+.close-button{
+
+    position:absolute;
+
+    right:18px;
+
+    top:18px;
+
+    width:42px;
+
+    height:42px;
+
+    border:none;
+
+    border-radius:50%;
+
+    background:var(--gold);
+
+    color:white;
+
+    font-size:1.2rem;
+
+    cursor:pointer;
+
+}
+
+.plan-description{
+
+    text-align:center;
+
+    margin:15px 0 25px;
+
+    color:var(--text-light);
+
+}
+
+.plan-wrapper{
+
+    position:relative;
+
+}
+
+#planImage{
+
+    width:100%;
+
+    display:block;
+
+    border-radius:16px;
+
+    border:2px solid rgba(201,162,75,.35);
+
+}
+
+#tableMarker{
+
+    position:absolute;
+
+    width:34px;
+
+    height:34px;
+
+    border-radius:50%;
+
+    background:#d62828;
+
+    border:4px solid white;
+
+    display:none;
+
+    transform:translate(-50%,-50%);
+
+    box-shadow:0 0 25px rgba(214,40,40,.55);
+
+}
+
+/* ==============================
+   TELEFON
+============================== */
+
+@media (max-width:600px){
+
+    .container{
+
+        width:95%;
+
+        padding:20px 0 40px;
 
     }
 
-    catch(error){
+    .card{
 
-        console.error(error);
+        padding:28px 20px;
 
-        alert("Nie udało się wczytać listy gości.");
+    }
+
+    h1{
+
+        font-size:1.8rem;
+
+    }
+
+    h2{
+
+        font-size:1rem;
+
+    }
+
+    .table-number{
+
+        font-size:5.5rem;
+
+    }
+
+    .logo{
+
+        width:120px;
 
     }
 
 }
-
-/* ==========================
-   WYSZUKIWANIE
-========================== */
-
-function getHall(table){
-
-    if(Number(table) <= 18){
-        return "Baltic Panorama";
-    }
-
-    return "Marco Polo Ballroom";
-
-}
-
-function searchGuests(){
-
-    const first = normalize(firstNameInput.value);
-    const last = normalize(lastNameInput.value);
-
-    if(first === "" && last === ""){
-
-        result.classList.add("hidden");
-
-        return;
-
-    }
-
-    const guest = guests.find(person=>{
-
-        const guestFirst = normalize(person.first_name);
-
-        const guestLast = normalize(person.last_name);
-
-        const firstOk =
-            first === "" ||
-            guestFirst.includes(first);
-
-        const lastOk =
-            last === "" ||
-            guestLast.includes(last);
-
-        return firstOk && lastOk;
-
-    });
-
-    if(!guest){
-
-        tableNumber.textContent="—";
-
-        roomName.textContent="Nie znaleziono gościa";
-
-        result.classList.remove("hidden");
-
-        planButton.style.display="none";
-
-        return;
-
-    }
-
-    tableNumber.textContent=guest.table;
-
-    roomName.textContent=getHall(guest.table);
-
-    result.classList.remove("hidden");
-
-    planButton.style.display="inline-flex";
-
-    planButton.onclick=function(){
-
-        openPlan(guest);
-
-    };
-
-}
-
-/* ==========================
-   PLAN SALI
-========================== */
-
-function openPlan(guest){
-
-    modal.classList.remove("hidden");
-
-    const table = Number(guest.table);
-
-    if(!tablePositions[table]){
-
-        tableMarker.style.display="none";
-
-        return;
-
-    }
-
-    tableMarker.style.display="block";
-
-    tableMarker.style.left=
-        tablePositions[table].x+"px";
-
-    tableMarker.style.top=
-        tablePositions[table].y+"px";
-
-}
-
-function closePlan(){
-
-    modal.classList.add("hidden");
-
-}
-
-modal.addEventListener(
-
-    "click",
-
-    function(event){
-
-        if(event.target===modal){
-
-            closePlan();
-
-        }
-
-    }
-
-);
-
-/* ==========================
-   START
-========================== */
-
-firstNameInput.addEventListener(
-    "input",
-    searchGuests
-);
-
-lastNameInput.addEventListener(
-    "input",
-    searchGuests
-);
-
-document.addEventListener(
-
-    "DOMContentLoaded",
-
-    async function(){
-
-        await loadGuests();
-
-        result.classList.add("hidden");
-
-    }
-
-);
