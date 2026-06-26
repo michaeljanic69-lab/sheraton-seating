@@ -1,186 +1,246 @@
+"use strict";
 
-:root{
-  --bg:#f8f4ec;
-  --card:#ffffff;
-  --gold:#b08d57;
-  --gold-dark:#8e6d3f;
-  --text:#2f2f2f;
-  --muted:#6d6d6d;
-  --shadow:0 10px 30px rgba(0,0,0,.08);
-  --radius:18px;
+/* =====================================================
+   SHERATON SEATING SYSTEM
+   SCRIPT.JS
+===================================================== */
+
+/* ==========================
+   ELEMENTY
+========================== */
+
+const firstNameInput = document.getElementById("firstName");
+const lastNameInput = document.getElementById("lastName");
+
+const result = document.getElementById("result");
+const tableNumber = document.getElementById("tableNumber");
+const roomName = document.getElementById("roomName");
+const planButton = document.getElementById("planButton");
+
+const modal = document.getElementById("planModal");
+const planImage = document.getElementById("planImage");
+const tableMarker = document.getElementById("tableMarker");
+
+/* ==========================
+   DANE
+========================== */
+
+let guests = [];
+
+/* ==========================
+   POZYCJE STOLIKÓW
+========================== */
+
+const tablePositions = {
+
+    // Uzupełnimy po naniesieniu współrzędnych
+    // 1:{x:120,y:220},
+    // 2:{x:220,y:220},
+
+};
+
+/* ==========================
+   NORMALIZACJA
+========================== */
+
+function normalize(text){
+
+    return String(text || "")
+        .toLowerCase()
+        .normalize("NFD")
+        .replace(/[\u0300-\u036f]/g,"")
+        .replace(/ł/g,"l")
+        .replace(/ą/g,"a")
+        .replace(/ć/g,"c")
+        .replace(/ę/g,"e")
+        .replace(/ń/g,"n")
+        .replace(/ó/g,"o")
+        .replace(/ś/g,"s")
+        .replace(/ż/g,"z")
+        .replace(/ź/g,"z")
+        .trim();
+
 }
 
-*{margin:0;padding:0;box-sizing:border-box}
+/* ==========================
+   ŁADOWANIE GOŚCI
+========================== */
 
-body{
-  font-family:Segoe UI,Arial,sans-serif;
-  background:var(--bg);
-  color:var(--text);
-  min-height:100vh;
+async function loadGuests(){
+
+    try{
+
+        const response = await fetch("guests.json");
+
+        guests = await response.json();
+
+        console.log(
+            "Załadowano",
+            guests.length,
+            "gości."
+        );
+
+    }
+
+    catch(error){
+
+        console.error(error);
+
+        alert("Nie udało się wczytać listy gości.");
+
+    }
+
 }
 
-.container{
-  width:min(1100px,92%);
-  margin:auto;
+/* ==========================
+   WYSZUKIWANIE
+========================== */
+
+function getHall(table){
+
+    if(Number(table) <= 18){
+        return "Baltic Panorama";
+    }
+
+    return "Marco Polo Ballroom";
+
 }
 
-.hero{
-  padding:48px 0 32px;
-  text-align:center;
+function searchGuests(){
+
+    const first = normalize(firstNameInput.value);
+    const last = normalize(lastNameInput.value);
+
+    if(first === "" && last === ""){
+
+        result.classList.add("hidden");
+
+        return;
+
+    }
+
+    const guest = guests.find(person=>{
+
+        const guestFirst = normalize(person.first_name);
+
+        const guestLast = normalize(person.last_name);
+
+        const firstOk =
+            first === "" ||
+            guestFirst.includes(first);
+
+        const lastOk =
+            last === "" ||
+            guestLast.includes(last);
+
+        return firstOk && lastOk;
+
+    });
+
+    if(!guest){
+
+        tableNumber.textContent="—";
+
+        roomName.textContent="Nie znaleziono gościa";
+
+        result.classList.remove("hidden");
+
+        planButton.style.display="none";
+
+        return;
+
+    }
+
+    tableNumber.textContent=guest.table;
+
+    roomName.textContent=getHall(guest.table);
+
+    result.classList.remove("hidden");
+
+    planButton.style.display="inline-flex";
+
+    planButton.onclick=function(){
+
+        openPlan(guest);
+
+    };
+
 }
 
-.logo{
-  width:90px;
-  max-width:30%;
-  margin-bottom:18px;
+/* ==========================
+   PLAN SALI
+========================== */
+
+function openPlan(guest){
+
+    modal.classList.remove("hidden");
+
+    const table = Number(guest.table);
+
+    if(!tablePositions[table]){
+
+        tableMarker.style.display="none";
+
+        return;
+
+    }
+
+    tableMarker.style.display="block";
+
+    tableMarker.style.left=
+        tablePositions[table].x+"px";
+
+    tableMarker.style.top=
+        tablePositions[table].y+"px";
+
 }
 
-h1{
-  font-size:2rem;
-  font-weight:700;
-  color:var(--gold-dark);
+function closePlan(){
+
+    modal.classList.add("hidden");
+
 }
 
-.subtitle{
-  margin-top:10px;
-  color:var(--muted);
-}
+modal.addEventListener(
 
-.search-section{
-  margin:20px 0 35px;
-}
+    "click",
 
-.search-box{
-  background:var(--card);
-  border-radius:999px;
-  box-shadow:var(--shadow);
-  padding:8px;
-}
+    function(event){
 
-#searchInput{
-  width:100%;
-  border:none;
-  outline:none;
-  background:transparent;
-  padding:16px 22px;
-  font-size:1rem;
-}
+        if(event.target===modal){
 
-.results{
-  display:grid;
-  gap:18px;
-  margin-bottom:60px;
-}
+            closePlan();
 
-.result-card{
-  background:var(--card);
-  border-radius:var(--radius);
-  box-shadow:var(--shadow);
-  padding:22px;
-  border-left:5px solid var(--gold);
-}
+        }
 
-.result-card h3{
-  margin-bottom:14px;
-}
+    }
 
-.info{
-  margin:8px 0;
-}
+);
 
-.planButton{
-  margin-top:18px;
-  border:none;
-  background:var(--gold);
-  color:#fff;
-  padding:12px 20px;
-  border-radius:999px;
-  cursor:pointer;
-  transition:.2s;
-}
+/* ==========================
+   START
+========================== */
 
-.planButton:hover{
-  background:var(--gold-dark);
-}
+firstNameInput.addEventListener(
+    "input",
+    searchGuests
+);
 
-.message{
-  text-align:center;
-  padding:16px;
-  background:#fff;
-  border-radius:14px;
-  box-shadow:var(--shadow);
-  margin-bottom:20px;
-}
+lastNameInput.addEventListener(
+    "input",
+    searchGuests
+);
 
-.hidden{
-  display:none!important;
-}
+document.addEventListener(
 
-.modal{
-  position:fixed;
-  inset:0;
-  background:rgba(0,0,0,.6);
-  display:flex;
-  justify-content:center;
-  align-items:center;
-  padding:20px;
-  z-index:999;
-}
+    "DOMContentLoaded",
 
-.modal-content{
-  width:min(1000px,100%);
-  background:#fff;
-  border-radius:20px;
-  padding:24px;
-  position:relative;
-}
+    async function(){
 
-.closeButton{
-  position:absolute;
-  top:15px;
-  right:15px;
-  border:none;
-  background:none;
-  font-size:2rem;
-  cursor:pointer;
-}
+        await loadGuests();
 
-.planWrapper{
-  position:relative;
-  overflow:auto;
-  margin-top:20px;
-}
+        result.classList.add("hidden");
 
-#hallPlan{
-  width:100%;
-  display:block;
-  border-radius:12px;
-}
+    }
 
-#tableMarker{
-  position:absolute;
-  width:36px;
-  height:36px;
-  border:4px solid var(--gold);
-  border-radius:50%;
-  transform:translate(-50%,-50%);
-  display:none;
-  animation:pulse 1.2s infinite;
-}
-
-@keyframes pulse{
-  0%{transform:translate(-50%,-50%) scale(1)}
-  50%{transform:translate(-50%,-50%) scale(1.2)}
-  100%{transform:translate(-50%,-50%) scale(1)}
-}
-
-footer{
-  padding:25px;
-  text-align:center;
-  color:var(--muted);
-}
-
-@media (min-width:768px){
-  h1{font-size:2.6rem}
-  #searchInput{font-size:1.1rem}
-}
+);
