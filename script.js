@@ -182,6 +182,7 @@ function openPlan(guest){
     }
 
     tableMarker.style.display="block";
+   console.log("MARKER", tablePositions[table]);
 
     tableMarker.style.left=
         tablePositions[table].x+"px";
