@@ -449,17 +449,17 @@ button:hover{
 
 }
 
-##tableMarker{
+#tableMarker{
     position:absolute;
     width:40px;
     height:40px;
     border-radius:50%;
     background:gold;
     border:3px solid white;
-    display:none;
     transform:translate(-50%,-50%);
     box-shadow:0 0 20px gold;
     z-index:999;
+    display:block !important;
 }
 
 /* ==============================
