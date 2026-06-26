@@ -1,23 +1,24 @@
-/*
-==================================================
-Sheraton Seating System
-Version 0.3
-==================================================
-*/
-
 "use strict";
+
+/* =====================================================
+   SHERATON SEATING SYSTEM
+   SCRIPT.JS
+===================================================== */
 
 /* ==========================
    ELEMENTY
 ========================== */
 
-const searchInput = document.getElementById("searchInput");
-const results = document.getElementById("results");
-const messageBox = document.getElementById("messageBox");
+const firstNameInput = document.getElementById("firstName");
+const lastNameInput = document.getElementById("lastName");
+
+const result = document.getElementById("result");
+const tableNumber = document.getElementById("tableNumber");
+const roomName = document.getElementById("roomName");
+const planButton = document.getElementById("planButton");
 
 const modal = document.getElementById("planModal");
-const closeModal = document.getElementById("closeModal");
-const hallTitle = document.getElementById("hallTitle");
+const planImage = document.getElementById("planImage");
 const tableMarker = document.getElementById("tableMarker");
 
 /* ==========================
@@ -26,9 +27,15 @@ const tableMarker = document.getElementById("tableMarker");
 
 let guests = [];
 
+/* ==========================
+   POZYCJE STOLIKÓW
+========================== */
+
 const tablePositions = {
 
-    // Uzupełnimy po dodaniu plan.png
+    // Uzupełnimy po naniesieniu współrzędnych
+    // 1:{x:120,y:220},
+    // 2:{x:220,y:220},
 
 };
 
@@ -36,34 +43,21 @@ const tablePositions = {
    NORMALIZACJA
 ========================== */
 
-function normalize(text) {
+function normalize(text){
 
     return String(text || "")
-
         .toLowerCase()
-
         .normalize("NFD")
-
-        .replace(/[\u0300-\u036f]/g, "")
-
-        .replace(/ł/g, "l")
-
-        .replace(/ą/g, "a")
-
-        .replace(/ć/g, "c")
-
-        .replace(/ę/g, "e")
-
-        .replace(/ń/g, "n")
-
-        .replace(/ó/g, "o")
-
-        .replace(/ś/g, "s")
-
-        .replace(/ż/g, "z")
-
-        .replace(/ź/g, "z")
-
+        .replace(/[\u0300-\u036f]/g,"")
+        .replace(/ł/g,"l")
+        .replace(/ą/g,"a")
+        .replace(/ć/g,"c")
+        .replace(/ę/g,"e")
+        .replace(/ń/g,"n")
+        .replace(/ó/g,"o")
+        .replace(/ś/g,"s")
+        .replace(/ż/g,"z")
+        .replace(/ź/g,"z")
         .trim();
 
 }
@@ -72,9 +66,9 @@ function normalize(text) {
    ŁADOWANIE GOŚCI
 ========================== */
 
-async function loadGuests() {
+async function loadGuests(){
 
-    try {
+    try{
 
         const response = await fetch("guests.json");
 
@@ -88,123 +82,13 @@ async function loadGuests() {
 
     }
 
-    catch (error) {
+    catch(error){
 
         console.error(error);
 
-        showMessage(
-            "Nie udało się wczytać bazy gości."
-        );
+        alert("Nie udało się wczytać listy gości.");
 
     }
-
-}
-
-/* ==========================
-   KOMUNIKATY
-========================== */
-
-function showMessage(text) {
-
-    messageBox.textContent = text;
-
-    messageBox.classList.remove("hidden");
-
-}
-
-function hideMessage() {
-
-    messageBox.textContent = "";
-
-    messageBox.classList.add("hidden");
-
-}
-
-
-/* ==========================
-   TWORZENIE KARTY
-========================== */
-
-function createGuestCard(guest) {
-
-    const firstName = guest.first_name || guest.firstName || "";
-    const lastName = guest.last_name || guest.lastName || "";
-
-    const table = guest.table ?? "-";
-
-    const hall = guest.hall || guest.room || "Sheraton Sopot";
-
-    const card = document.createElement("article");
-
-    card.className = "result-card";
-
-    card.innerHTML = `
-
-        <h3>${firstName} ${lastName}</h3>
-
-        <div class="info">
-
-            <strong>🪑 Stolik:</strong>
-
-            ${table}
-
-        </div>
-
-        <div class="info">
-
-            <strong>🏛 Sala:</strong>
-
-            ${hall}
-
-        </div>
-
-        <button class="planButton">
-
-            Pokaż plan sali
-
-        </button>
-
-    `;
-
-    card.querySelector(".planButton")
-
-        .addEventListener("click", () => {
-
-            openPlan(guest);
-
-        });
-
-    return card;
-
-}
-
-/* ==========================
-   WYNIKI
-========================== */
-
-function renderResults(foundGuests) {
-
-    results.innerHTML = "";
-
-    if (foundGuests.length === 0) {
-
-        showMessage("Nie znaleziono żadnego gościa.");
-
-        return;
-
-    }
-
-    hideMessage();
-
-    foundGuests.forEach(guest => {
-
-        results.appendChild(
-
-            createGuestCard(guest)
-
-        );
-
-    });
 
 }
 
@@ -212,114 +96,110 @@ function renderResults(foundGuests) {
    WYSZUKIWANIE
 ========================== */
 
-function searchGuests() {
+function getHall(table){
 
-    const query = normalize(
+    if(Number(table) <= 18){
+        return "Baltic Panorama";
+    }
 
-        searchInput.value
+    return "Marco Polo Ballroom";
 
-    );
+}
 
-    if (query === "") {
+function searchGuests(){
 
-        results.innerHTML = "";
+    const first = normalize(firstNameInput.value);
+    const last = normalize(lastNameInput.value);
 
-        hideMessage();
+    if(first === "" && last === ""){
+
+        result.classList.add("hidden");
 
         return;
 
     }
 
-    const filteredGuests = guests.filter(guest => {
+    const guest = guests.find(person=>{
 
-        const firstName = normalize(
+        const guestFirst = normalize(person.first_name);
 
-            guest.first_name || guest.firstName
+        const guestLast = normalize(person.last_name);
 
-        );
+        const firstOk =
+            first === "" ||
+            guestFirst.includes(first);
 
-        const lastName = normalize(
+        const lastOk =
+            last === "" ||
+            guestLast.includes(last);
 
-            guest.last_name || guest.lastName
-
-        );
-
-        const fullName = normalize(
-
-            firstName + " " + lastName
-
-        );
-
-        return (
-
-            firstName.includes(query)
-
-            ||
-
-            lastName.includes(query)
-
-            ||
-
-            fullName.includes(query)
-
-        );
+        return firstOk && lastOk;
 
     });
 
-    renderResults(filteredGuests);
+    if(!guest){
+
+        tableNumber.textContent="—";
+
+        roomName.textContent="Nie znaleziono gościa";
+
+        result.classList.remove("hidden");
+
+        planButton.style.display="none";
+
+        return;
+
+    }
+
+    tableNumber.textContent=guest.table;
+
+    roomName.textContent=getHall(guest.table);
+
+    result.classList.remove("hidden");
+
+    planButton.style.display="inline-flex";
+
+    planButton.onclick=function(){
+
+        openPlan(guest);
+
+    };
 
 }
-
 
 /* ==========================
    PLAN SALI
 ========================== */
 
-function openPlan(guest) {
-
-    const hall = guest.hall || guest.room || "Sheraton Sopot";
-
-    hallTitle.textContent = "Sala: " + hall;
+function openPlan(guest){
 
     modal.classList.remove("hidden");
 
-    const table = guest.table;
+    const table = Number(guest.table);
 
-    if (!tablePositions[table]) {
+    if(!tablePositions[table]){
 
-        tableMarker.style.display = "none";
+        tableMarker.style.display="none";
 
         return;
 
     }
 
-    tableMarker.style.display = "block";
+    tableMarker.style.display="block";
 
-    tableMarker.style.left =
-        tablePositions[table].x + "px";
+    tableMarker.style.left=
+        tablePositions[table].x+"px";
 
-    tableMarker.style.top =
-        tablePositions[table].y + "px";
+    tableMarker.style.top=
+        tablePositions[table].y+"px";
 
 }
 
-/* ==========================
-   ZAMKNIĘCIE OKNA
-========================== */
-
-function closePlan() {
+function closePlan(){
 
     modal.classList.add("hidden");
 
 }
-
-closeModal.addEventListener(
-
-    "click",
-
-    closePlan
-
-);
 
 modal.addEventListener(
 
@@ -341,21 +221,25 @@ modal.addEventListener(
    START
 ========================== */
 
-searchInput.addEventListener(
-
+firstNameInput.addEventListener(
     "input",
-
     searchGuests
+);
 
+lastNameInput.addEventListener(
+    "input",
+    searchGuests
 );
 
 document.addEventListener(
 
     "DOMContentLoaded",
 
-    function(){
+    async function(){
 
-        loadGuests();
+        await loadGuests();
+
+        result.classList.add("hidden");
 
     }
 
