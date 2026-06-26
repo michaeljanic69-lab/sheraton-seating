@@ -32,11 +32,7 @@ let guests = [];
 ========================== */
 
 const tablePositions = {
-
-    // Uzupełnimy po naniesieniu współrzędnych
-    // 1:{x:120,y:220},
-    // 2:{x:220,y:220},
-
+    31: { x: 520, y: 300 }
 };
 
 /* ==========================
